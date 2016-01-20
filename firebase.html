@@ -10,13 +10,15 @@
         function MainController($scope, $http) {
 
             // IMPORTANT: REPLACE WITH YOUR OWN FIREBASE URL
-            var url = 'https://vivid-fire-7010.firebaseio.com/test';
+            var url = 'https://blinding-fire-7673.firebaseio.com/';
 
             var vm = this;
-            vm.postData = { yourData: "Type something here!" };
+            vm.postData = { yourData: "Enter value here." };
             vm.data = [];
             vm.post = post;
             vm.get = get;
+            vm.put = put;
+            vm.del = del;
 
             function post() {
                 $http.post(url + '.json', vm.postData).then(function (response) {
@@ -31,9 +33,33 @@
                     item.value = response.data.yourData;
                 });
             }
+
+            function put(item) {
+                $http.put(url + '/' + item.key + '.json', { 'yourData' : item.value });
+
+            }
+
+            function del(item) {
+                $http.delete(url + '/' + item.key + '.json', { 'yourData' : item.value });
+            }
         }
 
     </script>
+    <style>
+        body {
+            font-size: 24px;
+            font-family: Arial, sans-serif;
+            background-color: #434343;
+            color: deepskyblue;
+        }
+        button {
+            background-color: deepskyblue;
+            padding: 9px;
+        }
+        .delbutton {
+            background-color: crimson;
+        }
+    </style>
 </head>
 <body ng-app="app">
 
@@ -54,7 +80,8 @@
                     ng-click="vm.get(item); item.clicked = true"></button>
             <p ng-show="item.clicked">
                 The data you POSTed earlier that is associated with this key is:
-                {{ item.value }}
+                <input ng-model="item.value"><button ng-click="vm.put(item);">Update</button>
+                <button class="delbutton" ng-click="vm.del(item);">DELETE</button>
             </p>
         </div>
     </div>
